@@ -1,0 +1,30 @@
+{
+  "id": "3469480",
+  "name": "mdsd-nas",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "6150962",
+      "name": "qrcode",
+      "font_class": "qrcode",
+      "unicode": "e76e",
+      "unicode_decimal": 59246
+    },
+    {
+      "icon_id": "6151150",
+      "name": "user plus-fill",
+      "font_class": "userplus-fill",
+      "unicode": "e7d4",
+      "unicode_decimal": 59348
+    },
+    {
+      "icon_id": "11488290",
+      "name": "map",
+      "font_class": "map",
+      "unicode": "e786",
+      "unicode_decimal": 59270
+    }
+  ]
+}

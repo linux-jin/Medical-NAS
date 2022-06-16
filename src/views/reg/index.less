@@ -1,0 +1,65 @@
+.reg-list-wrapper {
+  min-width: 100vw;
+  min-height: 100vh;
+  background-color: #f8f8f8;
+  padding-top: 100px;
+  /deep/ .van-nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    .van-nav-bar__left {
+      i {
+        font-size: 46px;
+      }
+    }
+    .van-nav-bar__right {
+      i {
+        font-size: 46px;
+      }
+    }
+  }
+  .list {
+    ul {
+      li {
+        margin: 20px;
+        .van-card__header {
+          .van-card__thumb {
+            display: flex;
+            align-items: center;
+            width: auto;
+          }
+          .van-card__price {
+            .codeBtn {
+              background-color: #444fdb;
+              border-color: #444fdb;
+              margin-right: 20px;
+            }
+          }
+        }
+        .van-card__content {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-direction: initial;
+          .van-card__title {
+            font-size: 30px;
+            font-weight: bold;
+            margin-right: 20px;
+          }
+        }
+        .van-swipe-cell {
+          border-radius: 20px;
+        }
+        .van-card {
+          background-color: #fff;
+        }
+      }
+    }
+  }
+  .reg-list-button {
+    background-color: #444fdb;
+    border-color: #444fdb;
+  }
+}

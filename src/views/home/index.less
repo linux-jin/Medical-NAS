@@ -1,0 +1,69 @@
+.home-index-wrapper {
+  background-color: #f8f8f8;
+  min-width: 100vw;
+  min-height: 100vh;
+  .home-bg {
+    .van-image {
+      width: 100%;
+      height: 400px;
+    }
+  }
+  .home-tip,
+  .home-reg,
+  .home-code,
+  .home-map {
+    margin: 0 30px 30px;
+    background-color: #fff;
+    padding: 30px 20px;
+    border-radius: 10px;
+    font-size: 30px;
+    line-height: 2;
+    .iconfont {
+      font-size: 80px;
+    }
+    .van-icon {
+      font-size: 40px;
+    }
+  }
+  .home-tip {
+    margin-top: -50px;
+    position: relative;
+    z-index: 1;
+    h3 {
+      font-size: 32px;
+      line-height: 1.1;
+      font-weight: bold;
+      margin-bottom: 20px;
+      border-left: 10px solid #444fdb;
+      padding-left: 10px;
+    }
+    p {
+      font-size: 26px;
+      color: #aaa;
+      line-height: 1.5;
+    }
+  }
+  .home-reg,
+  .home-code,
+  .home-map {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    p {
+      width: 400px;
+      span {
+        display: block;
+        &:nth-of-type(1) {
+          font-size: 40px;
+          font-weight: bold;
+          line-height: 1.5;
+        }
+        &:nth-of-type(2) {
+          font-size: 30px;
+          color: #aaa;
+        }
+      }
+    }
+  }
+}
