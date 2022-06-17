@@ -10838,6 +10838,11 @@ websocket-extensions@>=0.1.1:
   resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.4.tgz#7f8473bc839dfd87608adb95d7eb075211578a42"
   integrity sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==
 
+weixin-jsapi@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/weixin-jsapi/-/weixin-jsapi-1.1.0.tgz#51a95a2224c59d1d8f02fddbc6de52da16b344b3"
+  integrity sha512-986drpgKs1yf8gK1A/hrdF2U5cjp/zW/7bhoL37JLoePhNiO14JqZpa+wlNslge0Hlw7gEXMTnEntFvvSXz8Bw==
+
 which-boxed-primitive@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/which-boxed-primitive/-/which-boxed-primitive-1.0.2.tgz#13757bc89b209b049fe5d86430e21cf40a89a8e6"

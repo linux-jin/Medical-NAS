@@ -13,7 +13,7 @@ import moment from 'vue-moment'
 import _ from 'lodash'
 import Bridge from './utils/bridge.js'
 import api from './utils/http'
-
+import wx from 'weixin-jsapi'
 import './plugins/vant'
 import './components/special/MedSvg'
 import components from './plugins/components'
@@ -25,6 +25,7 @@ import './assets/iconfonts/iconfont.css'
 Vue.prototype.$bridge = Bridge
 Vue.prototype._ = _
 Vue.prototype._storage = storage
+Vue.prototype._wx = wx
 
 Vue.use(moment)
 Vue.use(components)

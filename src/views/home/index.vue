@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import storage from 'store'
 export default {
   name: 'Home',
   data() {
@@ -40,7 +39,7 @@ export default {
   },
   created() {
     const openid = this.$route.query.openid
-    storage.set('openid', openid)
+    this._storage.set('openid', openid)
   },
   methods: {
     goReg() {
@@ -54,9 +53,10 @@ export default {
       })
     },
     goMap() {
-      this.$router.push({
-        path: '/map'
-      })
+      this._wx.miniProgram.redirectTo({ url: '/pages/map/index' })
+      // this.$router.push({
+      //   path: '/map'
+      // })
     }
   }
 }

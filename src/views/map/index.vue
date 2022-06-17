@@ -1,5 +1,7 @@
 <template>
-  <div class="map-wrapper"></div>
+  <div class="map-wrapper">
+    暂时只支持在小程序中使用便民地图
+  </div>
 </template>
 <script>
 export default {
