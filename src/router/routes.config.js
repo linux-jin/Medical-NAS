@@ -31,6 +31,12 @@ export default [
           import('@views/code/index').then(module => resolve(module))
       },
       {
+        name: 'CodeShow',
+        path: '/code/:id',
+        component: resolve =>
+          import('@views/code/code').then(module => resolve(module))
+      },
+      {
         name: 'Map',
         path: '/map',
         component: resolve =>

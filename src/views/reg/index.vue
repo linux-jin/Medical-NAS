@@ -15,14 +15,6 @@
               </template>
 
               <template #price>
-                <van-button
-                  round
-                  type="primary"
-                  class="codeBtn"
-                  @click.stop="showCode(item)"
-                >
-                  检测码
-                </van-button>
                 <van-button round type="danger" @click.stop="unbindCode(item)">
                   解绑
                 </van-button>
@@ -33,7 +25,7 @@
       </ul>
     </div>
     <van-empty v-else description="暂无相关信息">
-      <van-button type="primary" class="reg-list-button">
+      <van-button type="primary" class="reg-list-button" @click="add">
         点击新增
       </van-button>
     </van-empty>
@@ -44,44 +36,51 @@ export default {
   name: 'RegList',
   data() {
     return {
-      list: [
-        {
-          id: 1,
-          name: '爸爸'
-        },
-        {
-          id: 2,
-          name: '妈妈'
-        },
-        {
-          id: 3,
-          name: '本人'
-        },
-        {
-          id: 4,
-          name: '妻子'
-        },
-        {
-          id: 5,
-          name: '儿子'
-        },
-        {
-          id: 6,
-          name: '女儿'
-        },
-        {
-          id: 7,
-          name: '爷爷'
-        }
-      ]
+      list: [],
+      relation: []
     }
   },
-  created() {
-    this.getList()
+  async created() {
+    await this.getRelation()
+    await this.getList()
   },
   methods: {
-    getList() {
-      console.log('获取列表')
+    async getRelation() {
+      try {
+        const res = await await this.$api.regist.getOption({
+          code: 'REL.0001'
+        })
+        if (res.code === 0) {
+          this.relation = res.data
+        } else {
+          throw new Error(res.message)
+        }
+      } catch (err) {
+        this.$notify({ type: 'warning', message: err.message || '查询失败' })
+      }
+    },
+    async getList() {
+      const param = {
+        unionId: this._storage.get('openid')
+      }
+      try {
+        const res = await this.$api.regist.getList(param)
+        if (res.code === 0) {
+          this.list = res.data.map(item => {
+            const relation = this.relation.find(
+              el => el.value === item.relationsheep
+            )
+            return {
+              ...item,
+              name: item.name + '(' + relation.label + ')'
+            }
+          })
+        } else {
+          throw new Error(res.message)
+        }
+      } catch (err) {
+        this.$notify({ type: 'warning', message: err.message || '查询失败' })
+      }
     },
     add() {
       this.$router.push({
@@ -91,8 +90,22 @@ export default {
     onClickLeft() {
       this.$router.go(-1)
     },
-    showCode() {},
-    unbindCode() {}
+    async unbindCode(item) {
+      const param = {
+        ...item
+      }
+      try {
+        const res = await this.$api.regist.unbindList(param)
+        if (res.code === 0) {
+          this.$notify({ type: 'warning', message: '解绑成功' })
+          this.getList()
+        } else {
+          throw new Error(res.message)
+        }
+      } catch (err) {
+        this.$notify({ type: 'warning', message: err.message || '解绑失败' })
+      }
+    }
   }
 }
 </script>

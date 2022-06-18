@@ -1,2 +1,1 @@
-var GLOBAL_APP_API_BASE_URL = 'http://192.168.104.114:8094/stroke'
-var GLOBAL_APP_API_DIC_URL = 'http://192.168.0.96:8092'
+var GLOBAL_APP_API_BASE_URL = 'http://192.168.0.96:49120/mdsdNas'

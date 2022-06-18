@@ -22,5 +22,54 @@
   .code {
     position: relative !important;
     top: 200px !important;
+    h3 {
+      font-weight: bold;
+      font-size: 50px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    p {
+      font-size: 40px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+  }
+  .list {
+    ul {
+      li {
+        margin: 20px;
+        .van-card__header {
+          .van-card__thumb {
+            display: flex;
+            align-items: center;
+            width: auto;
+          }
+          .van-card__price {
+            .codeBtn {
+              background-color: #444fdb;
+              border-color: #444fdb;
+              margin-right: 20px;
+            }
+          }
+        }
+        .van-card__content {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-direction: initial;
+          .van-card__title {
+            font-size: 30px;
+            font-weight: bold;
+            margin-right: 20px;
+          }
+        }
+        .van-swipe-cell {
+          border-radius: 20px;
+        }
+        .van-card {
+          background-color: #fff;
+        }
+      }
+    }
   }
 }

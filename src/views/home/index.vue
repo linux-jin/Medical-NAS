@@ -53,10 +53,15 @@ export default {
       })
     },
     goMap() {
-      this._wx.miniProgram.redirectTo({ url: '/pages/map/index' })
-      // this.$router.push({
-      //   path: '/map'
-      // })
+      const ua = navigator.userAgent.toLowerCase()
+      const isWeixin = ua.indexOf('micromessenger') !== -1
+      if (isWeixin) {
+        this._wx.miniProgram.redirectTo({ url: '/pages/map/index' })
+      } else {
+        this.$router.push({
+          path: '/map'
+        })
+      }
     }
   }
 }

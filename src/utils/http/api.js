@@ -23,17 +23,7 @@ export default function $axios(options) {
 
     instance.interceptors.request.use(
       config => {
-        // TODO: 文件上传接口统一
-        if (config.url.startsWith('/files')) {
-          config.headers['Conten-Type'] = 'multipart/form-data;charse=UTF-8'
-        } else {
-          config.headers['Conten-Type'] = 'application/json;charset=utf-8'
-        }
-
-        //  TODO: 调取字典表接口统一
-        if (config.url && config.url.substring(0, 5) === '/dic/') {
-          config.baseURL = window.GLOBAL_APP_API_DIC_URL
-        }
+        config.headers['Conten-Type'] = 'application/json;charset=utf-8'
 
         if (
           config.method.toLocaleLowerCase() === 'get' ||

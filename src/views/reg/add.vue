@@ -7,12 +7,13 @@
     ></van-nav-bar>
     <van-form validate-first @submit="confirmBind">
       <van-field
-        v-model.trim="relation"
+        v-model.trim="relationsheep"
         label="关系"
+        readonly
         placeholder="请选择（必填）"
         required
         :rules="[{ required: true, message: '请选择' }]"
-        @click="showList('relation', '关系')"
+        @click="showList('relationsheep', '关系')"
       />
       <van-field
         v-model.trim="name"
@@ -24,14 +25,11 @@
       <van-field
         label="证件类型"
         readonly
-        rows="1"
-        type="textarea"
-        autosize
         value="身份证"
         placeholder="请选择（必填）"
       />
       <van-field
-        v-model.trim="cid"
+        v-model.trim="identificationCard"
         required
         rows="1"
         type="textarea"
@@ -42,30 +40,28 @@
       />
       <van-field
         v-model.trim="sex"
+        readonly
         required
-        rows="1"
-        type="textarea"
-        autosize
         label="性别"
         placeholder="请输入 （必填）"
         :rules="[{ required: true }]"
         @click="showList('sex', '性别')"
       />
       <van-field
-        v-model.trim="mobphone"
+        v-model.trim="phone"
         label="移动电话"
         required
         placeholder="请输入（必填）"
         :rules="[{ required: true }]"
       />
       <van-field
-        label="居住地址"
+        label="所在城市"
         readonly
         clickable
         rows="1"
         type="textarea"
         autosize
-        :value="regaddr"
+        :value="region"
         is-link
         required
         :rules="[{ required: true }]"
@@ -73,11 +69,47 @@
         @click="showArea = true"
       />
       <van-field
+        v-show="region"
+        label="所属街道"
+        readonly
+        :value="street"
+        is-link
+        required
+        :rules="[{ required: true }]"
+        placeholder="请选择（必填）"
+        @click="showList('street', '街道')"
+      />
+      <van-field
+        v-show="street"
+        label="所属社区"
+        readonly
+        :value="community"
+        is-link
+        required
+        :rules="[{ required: true }]"
+        placeholder="请选择（必填）"
+        @click="showList('community', '社区')"
+      />
+      <van-field
         label="详细地址"
-        v-model.trim="regaddrDetail"
+        v-model.trim="address"
         required
         placeholder="请输入（必填）"
         :rules="[{ required: true }]"
+      />
+      <van-field
+        label="职业"
+        readonly
+        v-model.trim="career"
+        placeholder="请选择"
+        :rules="[{ required: false }]"
+        @click="showList('career', '职业')"
+      />
+      <van-field
+        label="工作单位"
+        v-model.trim="job"
+        placeholder="请输入"
+        :rules="[{ required: false }]"
       />
       <div class="sureBtn">
         <van-button round block type="primary" native-type="submit">
@@ -109,6 +141,7 @@
         :finished="finished"
         finished-text="没有更多了"
         class="searchlist"
+        v-if="filterPopList.length"
       >
         <van-cell-group>
           <van-cell
@@ -116,44 +149,15 @@
             :key="item.value"
             :title="item.label"
             @click="listClick(item)"
-          ></van-cell>
+          />
         </van-cell-group>
       </van-list>
+      <van-empty description="暂无数据" />
     </van-popup>
   </div>
 </template>
 <script>
 import { areaList } from '@vant/area-data'
-const relationList = [
-  {
-    value: '0',
-    label: '本人'
-  },
-  {
-    value: '1',
-    label: '妻子'
-  },
-  {
-    value: '2',
-    label: '父亲'
-  },
-  {
-    value: '3',
-    label: '母亲'
-  },
-  {
-    value: '4',
-    label: '子女'
-  },
-  {
-    value: '5',
-    label: '爷爷'
-  },
-  {
-    value: '6',
-    label: '奶奶'
-  }
-]
 const sexList = [
   {
     value: '0',
@@ -169,18 +173,29 @@ export default {
   data() {
     return {
       areaList,
-      relationList,
       sexList,
-      relation: relationList[0].label,
-      relationId: relationList[0].value,
+      relationsheepList: [],
+      careerList: [],
+      streetList: [],
+      communityList: [],
+      relationsheep: '',
+      relationsheepId: '',
       name: '',
       sex: sexList[0].label,
       sexId: sexList[0].value,
-      cardTypeText: '0',
-      cid: '',
-      mobphone: '',
-      regaddr: '',
-      regaddrDetail: '',
+      idcardType: '0',
+      identificationCard: '',
+      phone: '',
+      region: '',
+      regionId: '',
+      street: '',
+      streetId: '',
+      community: '',
+      communityId: '',
+      address: '',
+      career: '',
+      careerId: '',
+      job: '',
       listKey: '',
       listTitle: '',
       filterPopList: [],
@@ -191,16 +206,48 @@ export default {
     }
   },
   methods: {
+    async getOptionList(key) {
+      let param = {}
+      if (key === 'career') {
+        param = {
+          code: 'CAREER.0001'
+        }
+      } else if (key === 'relationsheep') {
+        param = {
+          code: 'REL.0001'
+        }
+      } else if (key === 'street') {
+        param = {
+          extend: this.regionId
+        }
+      } else if (key === 'community') {
+        param = {
+          extend: this.streetId
+        }
+      }
+      const { data } = await this.$api.regist.getOption(param)
+      return data
+    },
     onConfirm(values) {
-      this.regaddr = values
+      this.region = values
         .filter(item => !!item)
         .map(item => item.name)
         .join('/')
+      const arr = values.filter(item => !!item).map(item => item.code)
+      this.regionId = arr[2]
       this.showArea = false
     },
-    showList(key, title, type) {
+    async showList(key, title, type) {
       this.type = type
       this.listKey = key
+      if (
+        key === 'career' ||
+        key === 'street' ||
+        key === 'community' ||
+        key === 'relationsheep'
+      ) {
+        this[key + 'List'] = await this.getOptionList(key)
+      }
       this.filterPopList = this[key + 'List']
       this.listTitle = '请选择' + title
       this.popListFlag = true
@@ -215,33 +262,47 @@ export default {
       this.listTitle = ''
       this.popListFlag = false
     },
-    confirmBind() {
+    async confirmBind() {
       const {
-        relation,
-        relationId,
+        relationsheepId,
         name,
-        sex,
         sexId,
-        cardTypeText,
-        cid,
-        mobphone,
-        regaddr,
-        regaddrDetail
+        idcardType,
+        identificationCard,
+        phone,
+        careerId,
+        job,
+        regionId,
+        communityId,
+        streetId,
+        address
       } = this
       const param = {
-        relation,
-        relationId,
+        relationsheep: relationsheepId,
         name,
-        sex,
-        sexId,
-        cardTypeText,
-        cid,
-        mobphone,
-        regaddr,
-        regaddrDetail
+        sex: sexId,
+        idcardType,
+        identificationCard,
+        phone,
+        career: careerId,
+        job,
+        region: regionId,
+        community: communityId,
+        street: streetId,
+        address,
+        unionId: this._storage.get('openid')
       }
-      console.log('确定绑定调接口', param)
-      this.$router.go(-1)
+      try {
+        const res = await this.$api.regist.bindList(param)
+        if (res.code === 0) {
+          this.$notify({ type: 'success', message: '新增成功' })
+          this.$router.go(-1)
+        } else {
+          throw new Error(res.message)
+        }
+      } catch (err) {
+        this.$notify({ type: 'warning', message: err.message || '新增失败' })
+      }
     }
   }
 }
