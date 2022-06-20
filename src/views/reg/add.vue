@@ -1,7 +1,7 @@
 <template>
   <div class="reg-add-wrapper">
     <van-nav-bar
-      title="新增绑定"
+      :title="editFlag ? '更新绑定' : '新增绑定'"
       left-arrow
       @click-left="$router.go(-1)"
     ></van-nav-bar>
