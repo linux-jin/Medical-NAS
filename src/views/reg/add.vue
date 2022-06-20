@@ -39,13 +39,13 @@
         :rules="[{ required: true }]"
       />
       <van-field
-        v-model.trim="sex"
+        v-model.trim="gender"
         readonly
         required
         label="性别"
         placeholder="请输入 （必填）"
         :rules="[{ required: true }]"
-        @click="showList('sex', '性别')"
+        @click="showList('gender', '性别')"
       />
       <van-field
         v-model.trim="phone"
@@ -69,7 +69,7 @@
         @click="showArea = true"
       />
       <van-field
-        v-show="region"
+        v-show="region || editFlag"
         label="所属街道"
         readonly
         :value="street"
@@ -80,7 +80,7 @@
         @click="showList('street', '街道')"
       />
       <van-field
-        v-show="street"
+        v-show="street || editFlag"
         label="所属社区"
         readonly
         :value="community"
@@ -158,7 +158,7 @@
 </template>
 <script>
 import { areaList } from '@vant/area-data'
-const sexList = [
+const genderList = [
   {
     value: '0',
     label: '男'
@@ -173,7 +173,8 @@ export default {
   data() {
     return {
       areaList,
-      sexList,
+      genderList,
+      allList: [],
       relationsheepList: [],
       careerList: [],
       streetList: [],
@@ -181,8 +182,8 @@ export default {
       relationsheep: '',
       relationsheepId: '',
       name: '',
-      sex: sexList[0].label,
-      sexId: sexList[0].value,
+      gender: genderList[0].label,
+      genderId: genderList[0].value,
       idcardType: '0',
       identificationCard: '',
       phone: '',
@@ -202,10 +203,79 @@ export default {
       popListFlag: false,
       loading: false,
       finished: true,
-      showArea: false
+      showArea: false,
+      editFlag: false
+    }
+  },
+  async created() {
+    this.editFlag = Boolean(this.$route.query.edit)
+    if (this.editFlag) {
+      const res = await this.getOptionList()
+      this.allList = res
+      this.setInfo()
     }
   },
   methods: {
+    async setInfo() {
+      const obj = this.$route.query.obj
+      const {
+        relationsheep,
+        name,
+        identificationCard,
+        gender,
+        phone,
+        region,
+        street,
+        community,
+        address,
+        career,
+        job
+      } = obj
+      this.relationsheep = relationsheep
+      const relationsheepArr = this.allList.filter(
+        item => item.code === 'REL.0001'
+      )
+      this.relationsheep = this.getlabelFromArr(
+        relationsheepArr,
+        relationsheep
+      )
+      this.relationsheepId = relationsheep
+      this.gender = this.getlabelFromArr(this.genderList, gender)
+      this.genderId = gender
+      this.regionId = region
+      this.region = this.getArea()
+      const streetArr = this.allList.filter(
+        item => item.code === 'STREET.0001'
+      )
+      this.street = this.getlabelFromArr(streetArr, street)
+      this.streetId = street
+      const communityArr = this.allList.filter(
+        item => item.code === 'COM.0001'
+      )
+      this.community = this.getlabelFromArr(communityArr, community)
+      this.communityId = community
+      const careerArr = this.allList.filter(
+        item => item.code === 'CAREER.0001'
+      )
+      this.career = this.getlabelFromArr(careerArr, career)
+      this.careerId = career
+      this.name = name
+      this.identificationCard = identificationCard
+      this.phone = phone
+      this.address = address
+      this.job = job
+    },
+    getArea() {
+      const area = this.regionId.split('/')
+      const province = areaList.province_list[area[0]]
+      const city = areaList.city_list[area[1]]
+      const county = areaList.county_list[area[2]]
+      return province + '/' + city + '/' + county
+    },
+    getlabelFromArr(arr, id) {
+      const obj = arr.find(item => item.value === id)
+      return obj?.label
+    },
     async getOptionList(key) {
       let param = {}
       if (key === 'career') {
@@ -217,24 +287,37 @@ export default {
           code: 'REL.0001'
         }
       } else if (key === 'street') {
+        const arr = this.regionId.split('/')
         param = {
-          extend: this.regionId
+          extend: arr[2]
         }
       } else if (key === 'community') {
         param = {
           extend: this.streetId
         }
       }
-      const { data } = await this.$api.regist.getOption(param)
-      return data
+      try {
+        const res = await await this.$api.regist.getOption(param)
+        if (res.code === 0) {
+          return res.data
+        } else {
+          throw new Error(res.message)
+        }
+      } catch (err) {
+        this.$notify({ type: 'warning', message: err.message || '查询失败' })
+        return []
+      }
     },
     onConfirm(values) {
       this.region = values
         .filter(item => !!item)
         .map(item => item.name)
         .join('/')
-      const arr = values.filter(item => !!item).map(item => item.code)
-      this.regionId = arr[2]
+      const arr = values
+        .filter(item => !!item)
+        .map(item => item.code)
+        .join('/')
+      this.regionId = arr
       this.showArea = false
     },
     async showList(key, title, type) {
@@ -266,7 +349,7 @@ export default {
       const {
         relationsheepId,
         name,
-        sexId,
+        genderId,
         idcardType,
         identificationCard,
         phone,
@@ -280,7 +363,7 @@ export default {
       const param = {
         relationsheep: relationsheepId,
         name,
-        sex: sexId,
+        gender: genderId,
         idcardType,
         identificationCard,
         phone,
@@ -292,10 +375,14 @@ export default {
         address,
         unionId: this._storage.get('openid')
       }
+      if (this.editFlag) param.id = this.$route.query.obj.id
       try {
         const res = await this.$api.regist.bindList(param)
         if (res.code === 0) {
-          this.$notify({ type: 'success', message: '新增成功' })
+          this.$notify({
+            type: 'success',
+            message: this.editFlag ? '更新成功' : '新增成功'
+          })
           this.$router.go(-1)
         } else {
           throw new Error(res.message)

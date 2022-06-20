@@ -7,14 +7,22 @@
     </van-nav-bar>
     <div class="list" v-if="list.length">
       <ul>
-        <li v-for="(item, index) in list" :key="index" @click="goDetail(item)">
+        <li v-for="(item, index) in list" :key="index">
           <van-swipe-cell>
-            <van-card :title="item.name">
+            <van-card :title="item.name + item.rel">
               <template #thumb>
                 <img src="@/assets/images/man.png" alt="" />
               </template>
 
               <template #price>
+                <van-button
+                  class="edit"
+                  round
+                  type="primary"
+                  @click.stop="editCode(item)"
+                >
+                  编辑
+                </van-button>
                 <van-button round type="danger" @click.stop="unbindCode(item)">
                   解绑
                 </van-button>
@@ -70,9 +78,10 @@ export default {
             const relation = this.relation.find(
               el => el.value === item.relationsheep
             )
+            const rel = '(' + relation.label + ')'
             return {
               ...item,
-              name: item.name + '(' + relation.label + ')'
+              rel: rel
             }
           })
         } else {
@@ -89,6 +98,15 @@ export default {
     },
     onClickLeft() {
       this.$router.go(-1)
+    },
+    editCode(item) {
+      this.$router.push({
+        path: '/regadd',
+        query: {
+          edit: 1,
+          obj: item
+        }
+      })
     },
     async unbindCode(item) {
       const param = {
