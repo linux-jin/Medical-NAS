@@ -123,6 +123,7 @@ module.exports = {
     'style-resources-loader': {
       preProcessor: 'less',
       patterns: [path.resolve(__dirname, 'src/assets/styles/variables.less')]
-    }
+    },
+    vconsole: true
   }
 }
