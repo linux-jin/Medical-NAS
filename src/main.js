@@ -11,7 +11,6 @@ import 'lib-flexible/flexible.js'
 
 import moment from 'vue-moment'
 import _ from 'lodash'
-import Bridge from './utils/bridge.js'
 import api from './utils/http'
 import wx from 'weixin-jsapi'
 import './plugins/vant'
@@ -22,7 +21,6 @@ import storage from 'store'
 import './assets/styles/index.less'
 import './assets/iconfonts/iconfont.css'
 
-Vue.prototype.$bridge = Bridge
 Vue.prototype._ = _
 Vue.prototype._storage = storage
 Vue.prototype._wx = wx
