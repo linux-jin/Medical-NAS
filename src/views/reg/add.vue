@@ -36,7 +36,10 @@
         autosize
         label="身份证号"
         placeholder="请输入 （必填）"
-        :rules="[{ required: true }]"
+        :rules="[
+          { required: true, message: '请输入身份证号' },
+          { pattern: cidPattern, message: '请输入正确的格式' }
+        ]"
       />
       <van-field
         v-model.trim="gender"
@@ -52,7 +55,10 @@
         label="移动电话"
         required
         placeholder="请输入（必填）"
-        :rules="[{ required: true }]"
+        :rules="[
+          { required: true, message: '请输入手机号' },
+          { pattern: phonePattern, message: '请输入正确的格式' }
+        ]"
       />
       <van-field
         label="所在城市"
@@ -204,7 +210,9 @@ export default {
       loading: false,
       finished: true,
       showArea: false,
-      editFlag: false
+      editFlag: false,
+      cidPattern: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}$)/,
+      phonePattern: /^1(3\d|4[5-9]|5[0-35-9]|6[2567]|7[0-8]|8\d|9[0-35-9])\d{8}$/
     }
   },
   async created() {
