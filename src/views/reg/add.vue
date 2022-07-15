@@ -381,6 +381,7 @@ export default {
         community: communityId,
         street: streetId,
         address,
+        createTime: this.$moment(),
         unionId: this._storage.get('openid')
       }
       if (this.editFlag) param.id = this.$route.query.obj.id
